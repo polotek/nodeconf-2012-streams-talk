@@ -11,7 +11,7 @@ LogStream.prototype.write = function(data) {
   this.emit('data', data);
 };
 LogStream.prototype.end = function(data) {
-  if(data) { this.emit('data', data); }
+  if(data) { this.write(data); }
 
   this.emit('end');
 };
