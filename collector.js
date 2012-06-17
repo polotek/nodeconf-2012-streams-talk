@@ -3,30 +3,39 @@ var Stream = require('stream').Stream
 
 var Collector = function() {
   this._bytesWritten = 0;
-  this._data = '';
+  this._data = null;
   this.readable = true;
   this.writable = true;
 };
 util.inherits(Collector, Stream);
 Collector.prototype.write = function(data) {
   if(typeof data == 'string') {
+    if(!this._data) { this._data = ''; }
+    this._data += data.toString();
     this._bytesWritten += Buffer.byteLength(data);
   } else {
+    // Buffer
+    if(!this._data) { this._data = []; }
+    this._data.push(data);
     this._bytesWritten += data.length;
   }
-
-  this._data += data.toString();
 
   this.emit('data', data);
 };
 Collector.prototype.end = function(data) {
   if(data) { this.write(data); }
 
+  this.getData();
+
   this.readable = false;
   this.writable = false;
   this.emit('end');
 };
 Collector.prototype.getData = function() {
+  if(Array.isArray(this._data)) {
+    this._data = Buffer.concat(this._data, this.getBytesWritten());
+  }
+
   return this._data;
 };
 Collector.prototype.getBytesWritten = function() {
