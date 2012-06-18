@@ -1,8 +1,8 @@
 var Stream = require('stream'),
   fs = require('fs'),
   http = require('http'),
-  GZipStream = require('./gzipstream'),
-  Collector = require('./collector');
+  GZipStream = require('./streams/gzipstream'),
+  Collector = require('./streams/collector');
 
 http.createServer(function(request, response) {
   var gzipper = new GZipStream(),

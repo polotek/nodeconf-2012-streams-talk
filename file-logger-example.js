@@ -1,5 +1,5 @@
 var Stream = require('stream'),
-    FileLogStream = require('./filelogstream');
+    FileLogStream = require('./streams/filelogstream');
 
 var format = function(d) {
       return 'log: ' + d + '\n';

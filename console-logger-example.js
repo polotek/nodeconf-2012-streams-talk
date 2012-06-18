@@ -1,7 +1,7 @@
 var Stream = require('stream'),
   fs = require('fs'),
   http = require('http'),
-  LogStream = require('./logstream');
+  LogStream = require('./streams/logstream');
 
 http.createServer(function(request, response) {
   var logstream = new LogStream();

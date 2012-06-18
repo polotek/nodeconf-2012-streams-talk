@@ -1,7 +1,7 @@
 var Stream = require('stream'),
   fs = require('fs'),
   http = require('http'),
-  Collector = require('./collector');
+  Collector = require('./streams/collector');
 
 http.createServer(function(request, response) {
   var collector = new Collector();
