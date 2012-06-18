@@ -25,13 +25,17 @@ Collector.prototype.write = function(data) {
 Collector.prototype.end = function(data) {
   if(data) { this.write(data); }
 
-  this.getData();
-
   this.readable = false;
   this.writable = false;
+
+  this.getData();
   this.emit('end');
 };
 Collector.prototype.getData = function() {
+  if(this.writable) {
+    throw new Error('Cannot get data before the end of the stream');
+  }
+
   if(Array.isArray(this._data)) {
     this._data = Buffer.concat(this._data, this.getBytesWritten());
   }
