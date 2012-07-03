@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<title>Streams - NodeConf 2012</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=1274, user-scalable=no">
+	<link rel="stylesheet" href="themes/ribbon/styles/style.css">
+	<style type="text/css">
+	.slide.bigger h3 {
+		position:absolute;
+		top:50%;
+		left:0;
+		width:100%;
+		text-align:center;
+		line-height:1;
+		font-size:80px;
+		-webkit-transform:translateY(-50%);
+		-moz-transform:translateY(-50%);
+		-ms-transform:translateY(-50%);
+		-o-transform:translateY(-50%);
+		transform:translateY(-50%);
+		}
+		.slide.bigger h3 a[target=_blank] {
+			margin:0;
+			}
+			.slide.bigger h3 a[target=_blank]:after {
+				content:'';
+				}
+	.slide h3 { font-size: 80px; }
+	</style>
+</head>
+<body class="list">
+	<header class="caption">
+		<h1>Streams - NodeConf 1012</h1>
+		<p>Marco Rogers, Yammer</p>
+	</header>
+	<div class="slide" id="intro"><div>
+		<section>
+			<header>
+				<h2>Node Streams</h2>
+			</header>
+			<p>I'm Marco Rogers<br/>
+				I work at Yammer.<br/>
+				I'm a javascript guy.</p>
+		</section>
+	</div></div>
+	<div class="slide shout" id="questions"><div>
+		<section>
+			<header>
+				<h2>Questions?</h2>
+			</header>
+		</section>
+	</div></div>
+	<div class="slide" id="incremental"><div>
+		<section>
+			<header>
+				<h2>What are they?</h2>
+			</header>
+			<p>Streams are special event emitters.</p>
+			<p>Streams are the way node tells you about incremental data.</p>
+		</section>
+	</div></div>
+	<div class="slide" id="logging"><div>
+		<section>
+			<pre>
+				<code>
+req.on(<mark>'data'</mark>, function(<mark>chunk</mark>) {
+  console.log('Got some data', chunk);
+});
+req.on('end', function() {
+  res.end();
+});
+				</code>
+			</pre>
+		</section>
+	</div></div>
+	<div class="slide" id="procrastinating"><div>
+		<section>
+			<header>
+				<h2>What are they?</h2>
+			</header>
+			<p>Streams are the way node encourages you to stop procrastinating.</p>
+		</section>
+	</div></div>
+	<div class="slide" id="buffering"><div>
+		<section>
+			<pre>
+				<code>
+// uploading
+var data = '';
+req.on('data', function(chunk) {
+  <mark>data += chunk;</mark>
+});
+req.on('end', function() {
+  fs.writeFile('./files/test.json', data);
+  <mark>res.end();</mark>
+});
+				</code>
+			</pre>
+		</section>
+	</div></div>
+	<div class="slide" id="inefficient"><div>
+		<section>
+			<header>
+				<h2>Why not?</h2>
+			</header>
+			<p>Buffering into memory is inefficient. That's how the other guys do it.</p>
+			<p>Streams are meant to be composed together into a "pipe" of continuous data.</p>
+		</section>
+	</div></div>
+	<div class="slide" id="piping"><div>
+		<section>
+			<pre>
+				<code>
+// uploading
+var file = fs.createWriteStream('./files/test.json');
+req.pipe(file);
+				</code>
+			</pre>
+		</section>
+	</div></div>
+	<div class="slide bigger" id="moving"><div>
+		<section>
+			<header>
+				<h2>Why?</h2>
+			</header>
+			<ul>
+				<li>Keep things moving.</li>
+				<li>Lower memory usage.</li>
+				<li>Higher throughput.</li>
+				<li>Handle backpressure.</li>
+			</ul>
+		</section>
+	</div></div>
+	<div class="slide" id="convince"><div>
+		<section>
+			<header>
+				<h2>Why?</h2>
+			</header>
+			<h3>Example</h3>
+			<p>uploading a file</p>
+		</section>
+	</div></div>
+	<div class="slide" id="custom"><div>
+		<section>
+			<header>
+				<h2>How?</h2>
+			</header>
+			<p>Write your own streams!</p>
+		</section>
+	</div></div>
+	<div class="slide" id="readstream"><div>
+		<section>
+			<header>
+				<h2>How?</h2>
+			</header>
+			<p><strong>ReadStream</strong>: Emits data as output</p>
+			<pre>
+				<code>
+req.on('data', function(data) { ... });
+file.on('data', function(data) { ... });
+				</code>
+			</pre>
+		</section>
+	</div></div>
+	<div class="slide" id="writestream"><div>
+		<section>
+			<header>
+				<h2>How?</h2>
+			</header>
+			<p><strong>WriteStream</strong>: Accepts data written as input</p>
+			<pre>
+				<code>
+res.write(data);
+file.write(data);
+				</code>
+			</pre>
+		</section>
+	</div></div>
+	<div class="slide" id="readwritestream"><div>
+		<section>
+			<header>
+				<h2>How?</h2>
+			</header>
+			<p><strong>ReadWriteStream</strong>: Kicks ass</p>
+			<p>Create a ReadWrite Streams to process and/or filter data while you stream it to it's destination</p>
+		</section>
+	</div></div>
+	<div class="slide" id="writable"><div>
+		<section>
+			<header>
+				<h2>ReadWriteStream</h2>
+			</header>
+			<p>Writable</p>
+			<ol>
+				<li><code>this.writable = true</code></li>
+				<li>Implement <code>write()</code>, process some data</li>
+				<li>Implement <code>end()</code>, stop when you're done</li>
+				<li>Expect a last write on end()</li>
+			</ol>
+		</section>
+	</div></div>
+	<div class="slide" id="readable"><div>
+		<section>
+			<header>
+				<h2>ReadWriteStream</h2>
+			</header>
+			<p>Readable</p>
+			<ol>
+				<li><code>this.readable = true</code></li>
+				<li>Emit "data" at some point</li>
+				<li>Emit "end" at some point</li>
+			</ol>
+		</section>
+	</div></div>
+	<div class="slide" id="compatibility"><div>
+		<section>
+			<header>
+				<h2>ReadWriteStream</h2>
+			</header>
+			<p>Compatibility</p>
+			<ul>
+				<li>Implement <code>pause()</code> and <code>resume()</code></li>
+				<li>Flip readable/writable when appropriate</li>
+				<li>Don't emit data after "end"</li>
+			</ul>
+		</section>
+	</div></div>
+	<div class="slide bigger" id="modularity"><div>
+		<section>
+			<header>
+				<h2>Why?</h2>
+			</header>
+			<p>Streams are how you bring modularity to streaming data.</p>
+			<p>Separate data processing from request handling.</p>
+		</section>
+	</div></div>
+	<div class="slide" id="questions2"><div>
+		<section>
+			<header>
+				<h2>Questions?</h2>
+			</header>
+			<ul>
+				<li>Strings vs. Buffers?</li>
+				<li>Better error handling?</code></li>
+				<li>When <em>not</em> to use streams?</li>
+				<li>Doing async work before piping?</li>
+				<li>Why doesn't <code>pause()</code> actually pause?</li>
+			</ul>
+		</section>
+	</div></div>
+	<div class="slide" id="thanks"><div>
+		<section>
+			<header>
+				<h2>Marco Rogers</h2>
+			</header>
+			<p>Thanks you so much for the community service award mention.</p>
+			<ul>
+				<li>github: <a href="https://github.com/polotek">https://github.com/polotek</a></li>
+				<li>twitter: @polotek (not for the faint of heart)</li>
+				<li>google+: <a href="https://plus.google.com/103540913304694267088">https://plus.google.com/103540913304694267088</a> (not a joke)</li>
+			</ul>
+		</section>
+	</div></div>
+	<!--
+		To hide progress bar from entire presentation
+		just remove “progress” element.
+		-->
+	<div class="progress"><div></div></div>
+	<script src="scripts/script.js"></script>
+</body>
+</html>
