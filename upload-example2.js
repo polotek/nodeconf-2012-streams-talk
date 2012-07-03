@@ -11,7 +11,7 @@ http.createServer(function(request, response) {
       part.pipe(fs.createWriteStream('./files/test.json'));
     }
     form.on('end', function() {
-      console.log(forHumans(process.memoryUsage()));
+      console.log('mem: ', forHumans(process.memoryUsage().rss));
       response.setHeader('Content-Type', 'text/plain; charset=utf-8');
       response.end('We got the junk you uploaded. Thanks.');
     });
