@@ -7,6 +7,8 @@ http.createServer(function(request, response) {
   if (request.url == '/upload' && request.method.toLowerCase() == 'post') {
     var form = new formidable.IncomingForm();
     form.onPart = function(part) {
+
+      // the part is a stream of the incoming upload
       var data = '';
       part.on('data', function(chunk) {
         data += chunk;
@@ -14,6 +16,7 @@ http.createServer(function(request, response) {
       part.on('end', function() {
         fs.writeFile('./files/test.json', data);
       });
+
     }
     form.on('end', function() {
       console.log('mem: ', forHumans(process.memoryUsage().rss));

@@ -5,10 +5,12 @@ var fs = require('fs')
 
 http.createServer(function(request, response) {
   if (request.url == '/upload' && request.method.toLowerCase() == 'post') {
-    // parse a file upload
     var form = new formidable.IncomingForm();
     form.onPart = function(part) {
+
+      // the part is a stream of the incoming upload
       part.pipe(fs.createWriteStream('./files/test.json'));
+
     }
     form.on('end', function() {
       console.log('mem: ', forHumans(process.memoryUsage().rss));
