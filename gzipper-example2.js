@@ -9,7 +9,7 @@ http.createServer(function(request, response) {
     form.onPart = function(part) {
 
       // gzip the uploaded data and write to disk
-      var zippedFile = fs.createWriteStream('./files/large-file.zip')
+      var zippedFile = fs.createWriteStream('./files/large-file.txt.zip')
         , gzipper = new GZipStream();
       part.pipe(gzipper).pipe(zippedFile);
 
