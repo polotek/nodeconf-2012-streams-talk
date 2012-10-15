@@ -1,25 +1,28 @@
-var Stream = require('stream'),
-  fs = require('fs'),
-  http = require('http'),
-  GZipStream = require('./streams/gzipstream'),
-  Collector = require('./streams/collector');
+var fs = require('fs')
+  , http = require('http')
+  , formidable = require('formidable')
+  , GZipStream = require('./streams/gzipstream');
 
 http.createServer(function(request, response) {
-  var gzipper = new GZipStream(),
-      collector = new Collector();
+  if (request.url == '/upload' && request.method.toLowerCase() == 'post') {
+    var form = new formidable.IncomingForm();
+    form.onPart = function(part) {
 
-  fs.createReadStream('./large-file.txt')
-    .pipe(gzipper)
-    .pipe(collector);
+      // gzip the uploaded data and write to disk
+      var zippedFile = fs.createWriteStream('./files/large-file.zip')
+        , gzipper = new GZipStream();
+      part.pipe(gzipper).pipe(zippedFile);
 
-  collector.on('end', function() {
-    response.writeHead(200, {
-      'Content-Encoding': 'gzip',
-      'Content-Type': 'text/plain',
-      'Content-Length': collector.getBytesWritten()
+    }
+    form.on('end', function() {
+      response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      response.end('We got the junk you uploaded. Thanks.');
     });
-    response.end(collector.getData());
-  });
+    return form.parse(request);
+  }
+
+  response.setHeader('Content-Type', 'text/html; charset=utf-8');
+  fs.createReadStream('./upload-example-form.html').pipe(response);
 }).listen(8080);
 
-console.log('Server listening on port 8080\n');
+console.log('Server ' + process.pid + ' listening on port 8080\n');
