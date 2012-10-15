@@ -44,13 +44,6 @@
 				I'm a javascript guy.</p>
 		</section>
 	</div></div>
-	<div class="slide shout" id="questions"><div>
-		<section>
-			<header>
-				<h2>Questions?</h2>
-			</header>
-		</section>
-	</div></div>
 	<div class="slide" id="callbacks"><div>
 		<section>
 			<header>
@@ -281,6 +274,42 @@ file.write(data);
 			<p>Help us make steams better.</p>
 		</section>
 	</div></div>
+	<div class="slide bigger" id="new_readable"><div>
+		<section>
+			<header>
+				<h2>New Readable Streams</h2>
+			</header>
+			<p>Slated for node 0.10.0 stable release.</p>
+			<p>Improve the story around parsing non-trivial streams.</p>
+			<p>Make stream support in node more consistent.</p>
+		</section>
+	</div></div>
+	<div class="slide" id="readable_example"><div>
+		<section>
+			<pre>
+				<code>
+var readstream = require('fs')
+   .createReadStream('./data.json');
+
+// hook to readable so you can restart your processing
+readstream.on('readable', function process() {
+  while((data = readstream.read()) !== null) {
+  	// do something with your data chunk
+  }
+});
+				</code>
+			</pre>
+		</section>
+	</div></div>
+	<div class="slide bigger" id="new_base_classes"><div>
+		<section>
+			<header>
+				<h2>New Base Classes</h2>
+			</header>
+			<p>Duplex - easier ReadWriteStream</p>
+			<p>Transform - process streaming data</p>
+		</section>
+	</div></div>
 	<div class="slide" id="questions2"><div>
 		<section>
 			<header>
@@ -300,10 +329,10 @@ file.write(data);
 			<header>
 				<h2>Marco Rogers</h2>
 			</header>
-			<p>Thanks you so much for the community service award mention.</p>
+			<p>Thanks. Let me know what other topics you want to hear about.</p>
 			<ul>
 				<li>github: <a href="https://github.com/polotek">https://github.com/polotek</a></li>
-				<li>twitter: @polotek (not for the faint of heart)</li>
+				<li>twitter: @polotek</li>
 				<li>google+: <a href="https://plus.google.com/103540913304694267088">https://plus.google.com/103540913304694267088</a> (not a joke)</li>
 			</ul>
 		</section>
